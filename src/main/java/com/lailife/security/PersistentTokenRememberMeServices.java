@@ -113,15 +113,8 @@ public class PersistentTokenRememberMeServices extends
             t.setUserAgent(request.getHeader("User-Agent"));
             return t;
         }).orElseThrow(() -> new UsernameNotFoundException("User " + loginOrPhone + " was not found in the database"));
-        try {
             persistentTokenRepository.saveAndFlush(token);
             addCookie(token, request, response);
-            response.setStatus(HttpStatus.OK.value());
-            response.getWriter().print(Message.fromResponseStatus(ResponseStatus.SUCCESS).toJson());
-        } catch (IOException e) {
-            log.error("Failed to save persistent token ", e);
-            response.setStatus(HttpStatus.FORBIDDEN.value());
-        }
     }
 
     @Override
